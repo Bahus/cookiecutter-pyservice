@@ -1,0 +1,10 @@
+{
+    "project_name": "Service",
+    "project_slug": "acme_{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
+    "project_port": null,
+    "project_description": "Service description",
+    "project_namespace": "acme",
+    "full_name": "ACME Name",
+    "email": "ACME email",
+    "config_db_name": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}_db"
+}

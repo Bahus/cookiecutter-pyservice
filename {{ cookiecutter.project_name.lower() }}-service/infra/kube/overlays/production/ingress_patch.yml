@@ -1,0 +1,3 @@
+- op: replace
+  path: "/spec/rules/0/host"
+  value: "{{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}.acme.com"

@@ -1,0 +1,40 @@
+version: '3.7'
+
+x-environment: &env
+  PYTHONDONTWRITEBYTECODE: 1
+  TEAMCITY_VERSION: ${TEAMCITY_VERSION}
+  ENV_FOR_DYNACONF: tests.compose
+
+services:
+  check: &base_service
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile
+      target: development
+    environment: *env
+    command: poetry run acme-tasks check -a
+    volumes:
+      - ${CODE_DIR:-.}:/code
+
+  tests:
+    <<: *base_service
+    command: poetry run acme-tasks wait-for-tcp --connections=database:5432 tests
+    depends_on:
+     - database
+
+  database:
+    image: registry.acme.com/debian-buster-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    command:
+      - postgres
+      - -c
+      - fsync=off
+      - -c
+      - synchronous_commit=off
+      - -c
+      - full_page_writes=off
+      - -c
+      - bgwriter_lru_maxpages=0

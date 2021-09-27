@@ -1,0 +1,22 @@
+default:
+  {{cookiecutter.config_db_name}}:
+    host: 'localhost'
+    port: 5432
+    user: 'postgres'
+    password: 'postgres'
+
+development.local: &development
+  domain: 'localhost'
+
+tests.compose:
+  <<: *development
+
+  {{cookiecutter.config_db_name}}:
+    host: 'database'
+
+staging.kubernetes:
+  {{cookiecutter.config_db_name}}:
+    host: 'pgbouncer'
+    port: 5432
+    user: __required__
+    password: __required__

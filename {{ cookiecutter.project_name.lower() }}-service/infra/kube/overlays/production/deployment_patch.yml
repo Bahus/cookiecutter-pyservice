@@ -1,0 +1,23 @@
+- op: replace
+  path: /spec/replicas
+  value: 4
+
+- op: replace
+  path: /spec/template/spec/containers/0/lifecycle/preStop/exec/command/1
+  value: '15'
+
+- op: replace
+  path: /spec/template/spec/containers/0/resources/limits/cpu
+  value: 1
+
+- op: replace
+  path: /spec/template/spec/containers/0/resources/limits/memory
+  value: 1Gi
+
+- op: replace
+  path: /spec/template/spec/containers/0/resources/requests/cpu
+  value: 0.5
+
+- op: replace
+  path: /spec/template/spec/containers/0/resources/requests/memory
+  value: 0.5Gi

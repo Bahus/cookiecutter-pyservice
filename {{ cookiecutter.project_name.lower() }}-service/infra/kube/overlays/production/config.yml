@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}-config
+  namespace: {{cookiecutter.project_namespace}}
+data:
+  ACME_ENV: 'production'
+  ENV_FOR_DYNACONF: 'production.kubernetes'
+  HTTP_PROXY: ''
+  HTTPS_PROXY: ''
+  VAULT_HOST: ''
+  VAULT_PORT: ''
+  VAULT_SCHEME: ''

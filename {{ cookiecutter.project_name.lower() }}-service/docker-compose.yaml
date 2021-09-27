@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+
+  {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}:
+    ports:
+      - {{cookiecutter.project_port}}:{{cookiecutter.project_port}}
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile
+      target: production
+    environment:
+      - ENV_FOR_DYNACONF=development.compose
+      - ACME_ENV=development
+    volumes:
+      - .:/code
+    networks:
+      - acme-subnet
+
+
+networks:
+  acme-subnet:
+      external:
+        name: acme-net

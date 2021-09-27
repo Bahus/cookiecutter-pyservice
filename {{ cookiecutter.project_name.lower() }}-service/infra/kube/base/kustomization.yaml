@@ -1,0 +1,8 @@
+namespace: {{cookiecutter.project_namespace}}
+resources:
+  - deployment.yml
+  - service.yml
+  - ingress.yml
+  - config.yml
+  - secret.yaml
+  - service_account.yaml

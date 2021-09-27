@@ -1,0 +1,54 @@
+uwsgi:
+  http: 0.0.0.0:{{cookiecutter.project_port}}
+  http-keepalive: 1
+  workers: 2
+  master: true
+  module: {{cookiecutter.project_slug}}.wsgi:app
+
+  # gevent setup
+  gevent: 30
+  gevent-early-monkey-patch: true
+
+  # stats server
+  stats: 0.0.0.0:8080
+  stats-http: true
+
+  # workers recycling
+  reload-on-rss: 250
+  max-worker-lifetime: 43200
+  max-requests: 7000
+  harakiri: 45
+
+  enable-threads: true
+  single-interpreter: true
+  strict: true
+  need-app: true
+  die-on-term: true
+  lazy-apps: true
+
+development:
+  python-autoreload: 1
+
+staging:
+  logger: default stdio
+  log-route: default ^((?!\"event\").)*$
+  logger: app stdio
+  log-route: app \"event\"
+  log-encoder: json:default {"event":"${msg}","timestamp":"${strftime:%%Y-%%m-%%dT%%H:%%M:%%SZ}","logger":"uwsgi","level":"debug","microsecs":"${micros}"}
+  log-encoder: format:app ${msg}
+  log-encoder: nl
+  logger-req: stdio
+  log-req-encoder: json {"event":"${msg}","timestamp":"${strftime:%%Y-%%m-%%dT%%H:%%M:%%SZ}","logger":"uwsgi.request","level":"info","microsecs":"${micros}"}
+  log-req-encoder: nl
+
+production:
+  logger: default stdio
+  log-route: default ^((?!\"event\").)*$
+  logger: app stdio
+  log-route: app \"event\"
+  log-encoder: json:default {"event":"${msg}","timestamp":"${strftime:%%Y-%%m-%%dT%%H:%%M:%%SZ}","logger":"uwsgi","level":"debug","microsecs":"${micros}"}
+  log-encoder: format:app ${msg}
+  log-encoder: nl
+  logger-req: stdio
+  log-req-encoder: json {"event":"${msg}","timestamp":"${strftime:%%Y-%%m-%%dT%%H:%%M:%%SZ}","logger":"uwsgi.request","level":"info","microsecs":"${micros}"}
+  log-req-encoder: nl

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}-config
+  namespace: {{cookiecutter.project_namespace}}
+data:
+  ACME_ENV: ${ACME_ENV}
+  ENV_FOR_DYNACONF: ${ENV_FOR_DYNACONF}
+  NO_PROXY: ".acme"
+  NO_COLOR: "1"

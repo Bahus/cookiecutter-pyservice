@@ -1,0 +1,80 @@
+---
+# ingress: deny all
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}-ingress-default
+  namespace: {{cookiecutter.project_namespace}}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}
+  policyTypes:
+    - Ingress
+  ingress: []
+---
+# egress: deny all
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}-egress-default
+  namespace: {{cookiecutter.project_namespace}}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}
+  policyTypes:
+    - Egress
+  egress: []
+---
+# ingress: allow specific sources
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}-ingress-main
+  namespace: {{cookiecutter.project_namespace}}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}
+  policyTypes:
+    - Ingress
+  ingress:
+# Rules for ingress traffic, example
+   - from:
+      - podSelector:
+          matchLabels:
+            app: some-service
+      ports:
+        - port: {{cookiecutter.project_port}}
+          protocol: TCP
+---
+# egress: allow specific destinations
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}-egress-main
+  namespace: {{cookiecutter.project_namespace}}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}
+  policyTypes:
+    - Egress
+  egress:
+    # allow dns resolution only in cluster
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+# Rules for egress traffic, example
+#    - to:
+#        - podSelector:
+#            matchLabels:
+#              app: some-service
+#      ports:
+#        - port: 9999
+#          protocol: TCP

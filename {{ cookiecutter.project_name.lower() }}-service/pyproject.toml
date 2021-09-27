@@ -1,0 +1,64 @@
+[tool.poetry]
+name = "{{ cookiecutter.project_slug }}"
+version = "0.0.0"
+description = "{{ cookiecutter.project_description }}"
+authors = ["{{ cookiecutter.full_name }} <{{ cookiecutter.email }}>", "ACME Team"]
+readme = 'README.md'
+repository = ""
+homepage = ""
+keywords = []
+
+[[tool.poetry.source]]
+name = "acme-pypi"
+url = "https://registry.acme.com/repository/pypi-acme-pay/simple/"
+default = true
+
+[[tool.poetry.source]]
+name = "acme-pypi-proxy"
+url = "https://registry.acme.com/repository/pypi-proxy/simple/"
+
+[tool.poetry.dependencies]
+python = ""
+pyuwsgi = "*"  # using wheels to avoid compiling
+
+[tool.poetry.dev-dependencies]
+
+# linting & formatting
+flake8 = "*"
+flake8-bandit = "*"
+flake8-broken-line = "*"
+flake8-builtins = "*"
+flake8-commas = "*"
+flake8-comprehensions = "*"
+flake8-docstrings = "*"
+flake8-isort = "*"
+flake8-print = "*"
+flake8-quotes = "*"
+flake8-string-format = "*"
+unify = "*"
+
+# testing
+faker = "*"
+factory_boy = "*"
+freezegun = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-deadfixtures = "*"
+pytest-env = "*"
+pytest-factoryboy = "*"
+pytest-instafail = "*"
+pytest-mock = "*"
+pytest-print = "*"
+pytest-randomly = "*"
+pytest-xdist = "*"
+safety = "*"
+
+# optional
+pytest-flask = {version = "*", optional = true}
+responses = "*"
+teamcity-messages = "*"
+deepdiff = "*"
+
+[build-system]
+requires = ["poetry>=1.0.5"]
+build-backend = "poetry.masonry.api"

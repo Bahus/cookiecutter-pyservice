@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}
+  name: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}
+  namespace: {{cookiecutter.project_namespace}}
+spec:
+  replicas: ${REPLICAS_NUMBER}
+  selector:
+    matchLabels:
+      app: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}
+  template:
+    metadata:
+      labels:
+        app: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}
+      annotations:
+        prometheus.io/port: "9095"
+        prometheus.io/path: "/metrics"
+        prometheus.io/scrape: "true"
+    spec:
+      containers:
+        - name: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}
+          envFrom:
+          - configMapRef:
+              name: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}-config
+          image: ${IMAGE_PATH}:${IMAGE_TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: {{cookiecutter.project_port}}
+              protocol: TCP
+          resources:
+            limits:
+              cpu: ${LIMIT_CPU}
+              memory: ${LIMIT_MEMORY}
+            requests:
+              cpu: ${LIMIT_CPU}
+              memory: ${LIMIT_MEMORY}
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 3
+            failureThreshold: 3
+            httpGet:
+              path: /healthcheck
+              port: {{cookiecutter.project_port}}
+          volumeMounts:
+            - mountPath: /etc/acme-app-secrets
+              name: secrets
+          lifecycle:
+            preStop:
+              exec:
+                # For graceful shutdown.
+                command: ["/bin/sleep", "${PRE_STOP_SECONDS}"]
+      restartPolicy: Always
+      securityContext: {}
+      nodeSelector: {}
+      serviceAccountName: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}
+      terminationGracePeriodSeconds: 30

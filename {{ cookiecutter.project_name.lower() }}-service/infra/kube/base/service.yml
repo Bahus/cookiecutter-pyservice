@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}
+  name: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}-external
+  namespace: {{cookiecutter.project_namespace}}
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: {{cookiecutter.project_port}}
+  selector:
+    app: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}
+  type: ClusterIP
+  clusterIP: None
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}
+  name: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}
+  namespace: {{cookiecutter.project_namespace}}
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: {{cookiecutter.project_port}}
+    - name: prometheus
+      port: 9095
+      protocol: TCP
+      targetPort: 9095
+  selector:
+    app: {{ cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}
+  type: ClusterIP

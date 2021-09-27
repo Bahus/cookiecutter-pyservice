@@ -1,0 +1,36 @@
+version: '3.7'
+
+services:
+
+  migrate:
+    build:
+      context: .
+      dockerfile: ./infra/docker/Dockerfile
+      target: development
+    environment:
+      - ACME_ENV=development
+      - ENV_FOR_DYNACONF=development.compose
+    command: migrate
+    volumes:
+      - .:/code
+    networks:
+      - acme-subnet
+
+  create-db:
+    image: registry.acme.com/debian-buster-postgres
+    volumes:
+      - .:/code
+      - database:/var/lib/postgresql/data
+    environment:
+      - PGUSER=postgres
+      - PGPASSWORD=postgres
+      - PGHOST=database
+      - PGPORT=5432
+    command:  "psql -f /code/infra/init_db.sql"
+    networks:
+      - acme-subnet
+
+networks:
+  acme-subnet:
+      external:
+        name: acme-net
