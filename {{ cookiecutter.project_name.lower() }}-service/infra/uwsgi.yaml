@@ -15,8 +15,6 @@ uwsgi:
 
   # workers recycling
   reload-on-rss: 250
-  max-worker-lifetime: 43200
-  max-requests: 7000
   harakiri: 45
 
   enable-threads: true
